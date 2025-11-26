@@ -7,12 +7,7 @@ import { useSearch } from "./hooks/useSearch";
 import { initialFileSystem } from "./jsondata/mockFileSystem";
 import "./App.css";
 
-/**
- * Main App Component
- * File Explorer Application with tree structure and file operations
- */
 function App() {
-  // File system state and operations
   const {
     fileSystem,
     selectedItem,
@@ -25,15 +20,20 @@ function App() {
     createFile,
     error,
     showError,
+    draggedItem,
+    dropTarget,
+    handleDragStart,
+    handleDragEnd,
+    handleDragOver,
+    handleDragLeave,
+    handleDrop,
   } = useFileSystem(initialFileSystem);
 
-  // Search functionality
   const { searchQuery, setSearchQuery, filteredFileSystem, clearSearch } =
     useSearch(fileSystem);
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Left Sidebar */}
       <Sidebar
         fileSystem={filteredFileSystem}
         selectedItem={selectedItem}
@@ -47,14 +47,17 @@ function App() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         onSearchClear={clearSearch}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        draggedItem={draggedItem}
+        dropTarget={dropTarget}
       />
 
-      {/* Right Content Area */}
       <div className="flex-1 flex flex-col">
-        {/* Error Message */}
         <ErrorMessage message={error} onDismiss={() => showError("")} />
-
-        {/* Content Display */}
         <ContentArea selectedItem={selectedItem} />
       </div>
     </div>

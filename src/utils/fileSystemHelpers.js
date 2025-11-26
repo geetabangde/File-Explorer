@@ -21,7 +21,6 @@ export const findParentById = (node, id, parent = null) => {
   return null;
 };
 
-
 export const searchInTree = (node, query) => {
   const results = [];
   const lowerQuery = query.toLowerCase();

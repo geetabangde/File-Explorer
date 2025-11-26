@@ -3,8 +3,7 @@ import { searchInTree } from '../utils/fileSystemHelpers';
 
 export const useSearch = (fileSystem) => {
   const [searchQuery, setSearchQuery] = useState('');
-
-  // Memoized filtered file system based on search query
+ 
   const filteredFileSystem = useMemo(() => {
     if (!searchQuery.trim()) {
       return fileSystem;

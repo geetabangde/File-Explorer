@@ -3,9 +3,6 @@ import { Folder, FolderPlus, FilePlus } from "lucide-react";
 import TreeItem from "./TreeItem";
 import SearchBar from "./SearchBar";
 
-/**
- * Sidebar component - Left panel with file tree
- */
 const Sidebar = ({
   fileSystem,
   selectedItem,
@@ -19,26 +16,28 @@ const Sidebar = ({
   searchQuery,
   onSearchChange,
   onSearchClear,
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  draggedItem,
+  dropTarget,
 }) => {
   return (
     <>
       <div className="w-80 bg-white border-r border-gray-200 flex flex-col h-full">
-        {/* Header */}
         <div className="p-4 border-b border-gray-200">
           <h1 className="text-lg font-semibold mb-3 flex items-center">
             <Folder className="w-5 h-5 mr-2 text-blue-600" />
             File Explorer
           </h1>
-
-          {/* Search Bar */}
           <SearchBar
             value={searchQuery}
             onChange={onSearchChange}
             onClear={onSearchClear}
           />
         </div>
-
-        {/* File Tree */}
         <div className="flex-1 overflow-auto">
           <TreeItem
             item={fileSystem}
@@ -51,10 +50,15 @@ const Sidebar = ({
             onCreateFile={onCreateFile}
             expandedFolders={expandedFolders}
             toggleFolder={toggleFolder}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+            draggedItem={draggedItem}
+            dropTarget={dropTarget}
           />
         </div>
-
-        {/* Action Buttons */}
         <div className="p-4 border-t border-gray-200 bg-gray-50">
           <button
             onClick={() => onCreateFolder("root")}
@@ -77,5 +81,4 @@ const Sidebar = ({
     </>
   );
 };
-
 export default Sidebar;

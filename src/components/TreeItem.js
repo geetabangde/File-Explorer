@@ -21,15 +21,22 @@ const TreeItem = ({
   onCreateFile,
   expandedFolders,
   toggleFolder,
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDragLeave,
+  onDrop,
+  draggedItem,
+  dropTarget,
 }) => {
   const [isRenaming, setIsRenaming] = useState(false);
   const [newName, setNewName] = useState(item.name);
   const [showActions, setShowActions] = useState(false);
-
   const isExpanded = expandedFolders.has(item.id);
   const isFolder = item.type === "folder";
+  const isDragging = draggedItem?.id === item.id;
+  const isDropping = dropTarget === item.id;
 
-  // Handle rename submission
   const handleRename = () => {
     if (newName.trim() && newName !== item.name) {
       const success = onRename(item.id, newName.trim());
@@ -42,7 +49,6 @@ const TreeItem = ({
     }
   };
 
-  // Handle keyboard events for renaming
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleRename();
@@ -55,16 +61,34 @@ const TreeItem = ({
   return (
     <>
       <div>
-        {/* Tree Item Row */}
         <div
+          draggable={item.id !== "root"}
+          onDragStart={(e) => {
+            if (item.id !== "root") {
+              onDragStart(e, item);
+            }
+          }}
+          onDragEnd={onDragEnd}
+          onDragOver={(e) => {
+            if (isFolder) {
+              onDragOver(e, item);
+            }
+          }}
+          onDragLeave={onDragLeave}
+          onDrop={(e) => {
+            if (isFolder) {
+              onDrop(e, item);
+            }
+          }}
           className={`flex items-center py-1 px-2 cursor-pointer hover:bg-gray-100 transition-colors ${
             selected === item.id ? "bg-blue-50 border-l-2 border-blue-500" : ""
+          } ${isDropping ? "bg-green-100 border-2 border-green-500 border-dashed" : ""} ${
+            isDragging ? "opacity-40" : ""
           }`}
           style={{ paddingLeft: `${level * 16 + 8}px` }}
           onMouseEnter={() => setShowActions(true)}
           onMouseLeave={() => setShowActions(false)}
         >
-          {/* Expand/Collapse Button */}
           {isFolder && (
             <button
               onClick={() => toggleFolder(item.id)}
@@ -79,7 +103,6 @@ const TreeItem = ({
             </button>
           )}
 
-          {/* Item Content */}
           <div
             onClick={() => {
               if (isFolder) {
@@ -89,14 +112,12 @@ const TreeItem = ({
             }}
             className="flex items-center flex-1 min-w-0"
           >
-            {/* Icon */}
             {isFolder ? (
               <Folder className="w-4 h-4 mr-2 text-yellow-600 flex-shrink-0" />
             ) : (
               <File className="w-4 h-4 mr-2 text-gray-600 flex-shrink-0" />
             )}
 
-            {/* Name or Input */}
             {isRenaming ? (
               <input
                 type="text"
@@ -116,7 +137,6 @@ const TreeItem = ({
             )}
           </div>
 
-          {/* Action Buttons */}
           {showActions && !isRenaming && item.id !== "root" && (
             <div className="flex items-center gap-1 ml-2">
               {isFolder && (
@@ -171,7 +191,6 @@ const TreeItem = ({
           )}
         </div>
 
-        {/* Children (Recursive) */}
         {isFolder && isExpanded && item.children && (
           <div>
             {item.children.map((child) => (
@@ -187,6 +206,13 @@ const TreeItem = ({
                 onCreateFile={onCreateFile}
                 expandedFolders={expandedFolders}
                 toggleFolder={toggleFolder}
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+                draggedItem={draggedItem}
+                dropTarget={dropTarget}
               />
             ))}
           </div>

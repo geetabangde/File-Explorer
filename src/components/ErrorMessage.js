@@ -3,7 +3,6 @@ import { X } from "lucide-react";
 
 const ErrorMessage = ({ message, onDismiss }) => {
   if (!message) return null;
-
   return (
     <>
       <div className="bg-red-50 border-l-4 border-red-500 p-4 m-4 animate-fade-in">
